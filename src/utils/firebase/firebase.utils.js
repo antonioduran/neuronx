@@ -7,23 +7,29 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from 'firebase/auth';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+} from 'firebase/firestore';
 
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyDOQpm6fg81jNukro2QeG_rLkq9eSBDqGY",
-    authDomain: "don-valente-db.firebaseapp.com",
-    projectId: "don-valente-db",
-    storageBucket: "don-valente-db.appspot.com",
-    messagingSenderId: "979760597567",
-    appId: "1:979760597567:web:e40ffaad09d6b0d056468a"
+  apiKey: 'AIzaSyDDU4V-_QV3M8GyhC9SVieRTDM4dbiT0Yk',
+  authDomain: 'crwn-clothing-db-98d4d.firebaseapp.com',
+  projectId: 'crwn-clothing-db-98d4d',
+  storageBucket: 'crwn-clothing-db-98d4d.appspot.com',
+  messagingSenderId: '626766232035',
+  appId: '1:626766232035:web:506621582dab103a4d08d6',
 };
-  
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+
+const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -32,22 +38,51 @@ googleProvider.setCustomParameters({
 });
 
 export const auth = getAuth();
-
-export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
 
-export const createUserProfileDocument = async (userAuth, additionalData) => {
-  if (!userAuth) return;
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const batch = writeBatch(db);
+  const collectionRef = collection(db, collectionKey);
+  
+  objectsToAdd.forEach((object) => {
+     const docRef = doc(collectionRef, object.title.toLowerCase());
+     batch.set(docRef, object);
+  });
 
-  console.log(userAuth);
+  await batch.commit();
+  console.log('done');
 };
 
-export const createUserDocumentFromAuth = async (userAuth, additionalInformation={}) => {
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, 'categories');
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+
+  return categoryMap;
+};
+
+export const createUserDocumentFromAuth = async (
+  userAuth,
+  additionalInformation = {}
+) => {
   if (!userAuth) return;
-  
-  const userDocRef = await doc(db, 'users', userAuth.uid );
+
+  const userDocRef = doc(db, 'users', userAuth.uid);
+
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
@@ -59,7 +94,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
         displayName,
         email,
         createdAt,
-        ...additionalInformation
+        ...additionalInformation,
       });
     } catch (error) {
       console.log('error creating the user', error.message);
@@ -71,15 +106,17 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
+
   return await createUserWithEmailAndPassword(auth, email, password);
-}
+};
 
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
+
   return await signInWithEmailAndPassword(auth, email, password);
-}
+};
 
 export const signOutUser = async () => await signOut(auth);
 
-export const onAuthStateChangedListener = (callback) => 
-onAuthStateChanged(auth, callback )
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);
