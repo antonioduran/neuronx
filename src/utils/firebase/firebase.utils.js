@@ -21,12 +21,12 @@ import {
 } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDDU4V-_QV3M8GyhC9SVieRTDM4dbiT0Yk',
-  authDomain: 'crwn-clothing-db-98d4d.firebaseapp.com',
-  projectId: 'crwn-clothing-db-98d4d',
-  storageBucket: 'crwn-clothing-db-98d4d.appspot.com',
-  messagingSenderId: '626766232035',
-  appId: '1:626766232035:web:506621582dab103a4d08d6',
+  apiKey: "AIzaSyDOQpm6fg81jNukro2QeG_rLkq9eSBDqGY",
+  authDomain: "don-valente-db.firebaseapp.com",
+  projectId: "don-valente-db",
+  storageBucket: "don-valente-db.appspot.com",
+  messagingSenderId: "979760597567",
+  appId: "1:979760597567:web:e40ffaad09d6b0d056468a"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
