@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProductCard from '../../components/product-card/product-card.component';
 import Spinner from '../../components/spinner/spinner.component';
+import React from "react";
+
 //import { CategoriesContext } from '../../contexts/categories.context';
 import { selectCategoriesMap, selectIsLoading } from '../../store/categories/categories.selector';
 import { CategoryContainer, Title } from './category.styles';

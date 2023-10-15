@@ -1,4 +1,6 @@
-import { /*useContext,*/ Fragment } from 'react';
+//import { /*useContext,*/ Fragment } from 'react';
+import React, { Fragment } from "react";
+
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 //import { CategoriesContext } from '../../contexts/categories.context';
 import CategoryPreview from '../../components/category-preview/category-preview.component';
