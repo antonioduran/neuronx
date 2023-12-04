@@ -12,6 +12,7 @@ const ProductCard = ({ product }) => {
   //const { addItemToCart } = useContext(CartContext);
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
+  console.log(':::::' + cartItems)
   const addProductToCart = () => dispatch(addItemToCart(cartItems, product));
 
   return (
